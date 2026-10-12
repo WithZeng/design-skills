@@ -1,64 +1,66 @@
 # design-skills
 
-别让 Claude Code 一上来就瞎写前端代码。
+**English** | [简体中文](README.zh-CN.md)
 
-平时让 AI 写页面，最头疼的就是：**它根本不知道自己写出来长什么样**。模块之间各玩各的、字号乱跳、配色一股廉价模板味，改两轮直接崩掉。
+Stop Claude Code from writing frontend code blind.
 
-这套 skills 来自我们给真实产品官网和后台重构时沉淀的规则：**强迫 Claude 像正经设计师一样干活——先搜参考、用大模型出图给你挑方向、你点头了才准写代码，写完还要逐项验收。**
+The biggest pain with AI-written pages: **it has no idea what its output actually looks like**. Sections don't match each other, font sizes jump around, the palette screams cheap template, and two rounds of edits later everything falls apart.
 
-## 真实改版效果
+These skills distill the rules we learned while rebuilding a real product's website and app: **they make Claude work like a proper designer — find references first, generate design drafts with an image model for you to pick a direction, write code only after you approve, then verify everything item by item.**
 
-官网首页实测改版前后对比。改版后首屏做成了一个可交互的动态窗口：输入研究课题、逐步执行、交付分析报告。
+## Real redesign
 
-![官网改版前后对比](docs/showcase/website.gif)
+Before and after of the website homepage. The new hero is a live, interactive product window: type a research topic, watch it run step by step, and get the analysis report.
 
-## 包含哪些 Skill
+![Website before and after](docs/showcase/website.gif)
 
-| Skill | 用来干嘛 | 触发时机 |
+## What's inside
+
+| Skill | What it does | When it triggers |
 | --- | --- | --- |
-| [`website-design`](skills/website-design/SKILL.md) | 官网、Landing Page、后台界面的全流程设计与实现 | 「重新设计这个页面」「现在这个后台太丑了」「给工作台找点好参考」 |
-| [`image-gen`](skills/image-gen/SKILL.md) | 走 OpenAI 兼容中转调用 GPT Image 出图，纯 Node 脚本零多余依赖 | 需要插画、图标、背景，或在设计流程中生成效果图供确认时 |
+| [`website-design`](skills/website-design/SKILL.md) | End-to-end design and build for websites, landing pages and app/admin screens | "Redesign this page", "this dashboard looks bad", "find good references for the workbench" |
+| [`image-gen`](skills/image-gen/SKILL.md) | Generates images with GPT Image models through OpenAI-compatible relays; a plain Node script with no extra dependencies | Illustrations, icons, backgrounds, or design drafts for review during the design flow |
 
-## 它是怎么干活的？
+## How it works
 
 ```mermaid
 flowchart LR
-  A[你的需求] --> B[搜参考截图<br/>+ 推荐布局方案]
-  B --> C[生成 2-3 套方向效果图]
-  C -->|你挑一套| D[细化局部效果图<br/>+ 交互状态分镜]
-  D -->|你敲定| E[写代码<br/>挂预览路由]
-  E --> F[逐项对照检查<br/>视觉 · 无障碍 · 响应式]
+  A[Your request] --> B[Reference screenshots<br/>+ recommended layouts]
+  B --> C[2-3 direction drafts]
+  C -->|you pick one| D[Detail drafts<br/>+ interaction storyboards]
+  D -->|you approve| E[Build<br/>behind a preview route]
+  E --> F[Check item by item<br/>visual · accessibility · responsive]
 ```
 
-核心就一条硬性规矩：**图没敲定，不准动手写一行代码；代码写完，对不上效果图不准提交。**
+One hard rule: **no code before the drafts are approved, and no commit until the build matches them.**
 
-### website-design 解决了哪些坑？
+### Problems website-design solves
 
-- **拒绝拼凑感**：强迫整页统一基准背景色、模块容器规范和层级字号，避免各模块像从五个不同模板拼出来的。
-- **动效不瞎加**：动效和质感必须跟着业务交互走，优先用稳定的成熟动效库，坚决不加劣质浮夸动画。
-- **交互有反馈**：按钮 hover、加载、空状态、移动端适配必须做全，直接对齐真实产品的组件交互标准。
-- **踩坑实录**：内置了对比度合规、减少动效适配、移动端溢出、多语言文案，以及第三方登录页（如 Clerk）定制样式的避坑规则。
+- **No patchwork look**: one base background, one section module and one type scale across the page, so sections don't look like they came from five different templates.
+- **Purposeful motion**: motion and depth follow the product's interactions, built on mature animation libraries — no cheap, flashy effects.
+- **Feedback everywhere**: hover, loading, empty states and mobile layouts are all covered, matching the interaction standard of real products.
+- **Lessons learned**: built-in rules for contrast compliance, reduced motion, mobile overflow, multilingual copy, and styling third-party auth pages (e.g. Clerk).
 
-目录结构：
+Layout:
 
 ```
 skills/
 ├── website-design/
-│   ├── SKILL.md                 # 主流程、设计规范、选库标准
+│   ├── SKILL.md                 # workflow, design rules, library selection
 │   └── references/
-│       ├── ui-references.md     # 参考站库、交互对照、截图检索方式
-│       ├── draft-prompts.md     # 效果图生成提示词模板
-│       ├── build-patterns.md    # 组件库选型、动效实现方案、登录页定制
-│       └── verification.md      # 视觉还原、无障碍、响应式检查清单
+│       ├── ui-references.md     # reference sites, interaction patterns, capture method
+│       ├── draft-prompts.md     # prompt templates for design drafts
+│       ├── build-patterns.md    # library choice, motion implementation, auth pages
+│       └── verification.md      # visual, accessibility and responsive checklist
 └── image-gen/
     ├── SKILL.md
     ├── config.example.json
     └── scripts/gen.mjs
 ```
 
-## 安装使用
+## Install
 
-建议用软链接安装，后续 `git pull` 更新直接生效：
+Install with symlinks so a `git pull` takes effect right away:
 
 ```bash
 git clone https://github.com/WithZeng/design-skills.git ~/Documents/design-skills
@@ -66,22 +68,22 @@ ln -s ~/Documents/design-skills/skills/website-design ~/.claude/skills/website-d
 ln -s ~/Documents/design-skills/skills/image-gen ~/.claude/skills/image-gen
 ```
 
-装好后，在 Claude Code 里直接说「帮我重新设计一下官网首页」即可触发。
+Then just tell Claude Code "redesign our website homepage" to trigger it.
 
-## 配置出图工具 (image-gen)
+## Configure image-gen
 
-1. 复制配置文件，填入你的中转站域名、默认模型、单次请求价格与默认预算 `defaultBudget`：
+1. Copy the config and fill in your relay hosts, default model, price per request and default budget `defaultBudget`:
 
    ```bash
    cp skills/image-gen/config.example.json skills/image-gen/config.json
    ```
 
-2. 配置 API Key（不要提交到 git）：在 `~/.config/image-gen/` 下放环境变量文件，或通过 `IMAGE_GEN_ENV` 指定路径，设置 `OPENAI_BASE_URL` 和 `OPENAI_API_KEY`（可加 `_2` … `_4` 作为备用中转，主中转失败时自动切换）。
+2. Set the API key (never commit it): put an env file under `~/.config/image-gen/`, or point `IMAGE_GEN_ENV` at one, with `OPENAI_BASE_URL` and `OPENAI_API_KEY` (add `_2` … `_4` as backup relays; the script falls back to them when the primary fails).
 
-3. 测试中转站可用模型：
+3. List the models each relay offers:
 
    ```bash
    node skills/image-gen/scripts/gen.mjs --models
    ```
 
-单次出图预算可通过 `--budget` 限制，未指定时走 `defaultBudget`；所有调用流水会自动记录在 `~/.config/image-gen/requests.jsonl` 便于对账。
+Cap spend per run with `--budget`; without it the script uses `defaultBudget`. Every request is logged to `~/.config/image-gen/requests.jsonl` for reconciliation.
