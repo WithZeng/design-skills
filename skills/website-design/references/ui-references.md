@@ -24,6 +24,14 @@ Counts and prices come from 2026 roundups and vendor pages (found by search on 2
 | Mobbin | Widest coverage, ~620K screens and ~140K flows across web, iOS, Android | Paid |
 | Page Flows | Annotated user-flow videos, shows interaction in motion | Paid |
 | Collect UI / Banani | Free references; Banani is mobile flows | Free |
+| Linear / Cursor homepages | Real app UI in the hero: agent panel inside a task page (Linear), task queue + plan document (Cursor) | Free |
+
+Access checked 2026-10-12 with an automated browser: Page Flows and Perplexity show a Cloudflare check, Mobbin needs login, Refero shows only a few results before login. Don't try to get past these; ask the user to browse them signed in.
+
+## AI chat and agent UI
+
+- **AI Elements** (elements.ai-sdk.dev): shadcn-registry components for AI apps: Tool (6 call states), Reasoning (auto-collapse after streaming), Plan, Confirmation (approve/reject), Artifact, Attachments, Prompt Input. Kibo UI's AI components now redirect here.
+- Pair with Linear/Cursor shots for layout and Magic UI Animated List for items arriving one by one.
 
 ## Component sources (build)
 
@@ -44,3 +52,14 @@ Typewolf (type pairings), Coolors (palettes), Dribbble and Behance (community), 
 - SaaS marketing site: Godly + Land-book for style, Refero for realistic product UI crops, Magic UI or 21st.dev for components.
 - Bold or experimental look: Awwwards + Godly.
 - Mobile app or flows: Mobbin or Page Flows.
+- AI chat / agent workbench: Linear + Cursor product shots for structure, AI Elements for message parts, Magic UI Animated List for motion. Keep Aceternity and Awwwards-style effects out of work screens.
+
+## Capturing references
+
+When the built-in browser can't open a site, use Playwright with the system Chrome (`channel: 'chrome'`):
+
+- Viewport 1440×900, `colorScheme: 'dark'` if the product is dark; `deviceScaleFactor: 2` for crops you will show.
+- Wait for load plus 3–4 s, scroll to the product screenshot area (`page.mouse.wheel`), then capture. Decline cookie banners ("Reject all").
+- Use the site's own pages for components (docs pages with a live preview), not search results.
+- Paste all captures into one contact sheet (PIL grid) to pick from, then copy the chosen ones to `tmp/design/vN-refs/picks/` with numbered names (`1-linear.png`, …) and show them in the file viewer.
+- Present: what each image shows and what to borrow, then 2–3 combos (references per area, effect, size of change) with one recommended.

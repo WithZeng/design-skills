@@ -1,14 +1,14 @@
 #!/usr/bin/env node
 // Standalone image generation (GPT Image models via OpenAI-compatible relays). Works from any directory.
 //   node gen.mjs --models                                  list image models on each relay (free)
-//   node gen.mjs --prompt "…" --out img.png --budget 0.10  one image per call (n=1)
-//     [--model m] [--size 1024x1024] [--quality low|medium|high] [--transparent] [--ref a.png --ref b.png]
+//   node gen.mjs --prompt "…" --out img.png                one image per call (n=1)
+//     [--budget usd] [--model m] [--size 1024x1024] [--quality low|medium|high] [--transparent] [--ref a.png --ref b.png]
 //     [--prompt-file f.txt] [--primary-only] [--force]
 //   node gen.mjs --probe --budget 0.10                     one low-quality test image
 // Credentials: OPENAI_BASE_URL / OPENAI_API_KEY (+ _2 … _4 as fallbacks) from the first env file found:
 //   $IMAGE_GEN_ENV, ~/.config/image-gen/.env, or "envFile" in ../config.json. The key is never printed or logged.
 // Prices per request come from ../config.json. A relay is skipped when its price would push the estimated
-// spend over --budget (failed requests count: relays may bill them). Every request sent is appended to
+// spend over --budget, or "defaultBudget" in ../config.json when --budget is omitted (failed requests count: relays may bill them). Every request sent is appended to
 // ~/.config/image-gen/requests.jsonl.
 import {readFileSync, writeFileSync, appendFileSync, mkdirSync, existsSync} from 'node:fs';
 import os from 'node:os';
@@ -73,9 +73,9 @@ const prompt = probe
   ? 'A single small yellow five-pointed star sticker with a thick black outline, centered on a plain white background.'
   : (val('--prompt') ?? (val('--prompt-file') ? readFileSync(val('--prompt-file'), 'utf8').trim() : undefined));
 const out = probe ? path.join(LOG_DIR, 'probe.png') : val('--out');
-if (!prompt || !out) die('usage: gen.mjs --prompt "…" --out file.png --budget <usd> [--model m] [--size WxH] [--quality q] [--transparent] [--ref f]… | --models | --probe');
-const budget = Number(val('--budget'));
-if (!Number.isFinite(budget) || budget <= 0) die('--budget <usd> is required: the user must approve a budget before any paid call');
+if (!prompt || !out) die('usage: gen.mjs --prompt "…" --out file.png [--budget usd] [--model m] [--size WxH] [--quality q] [--transparent] [--ref f]… | --models | --probe');
+const budget = Number(val('--budget') ?? cfg.defaultBudget);
+if (!Number.isFinite(budget) || budget <= 0) die('no budget: pass --budget <usd> or set "defaultBudget" in config.json');
 const outPath = path.resolve(out);
 if (existsSync(outPath) && !flag('--force')) die(`${outPath} exists (use --force to overwrite)`);
 

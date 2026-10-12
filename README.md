@@ -21,4 +21,4 @@ ln -s ~/Documents/design-skills/skills/image-gen ~/.claude/skills/image-gen
 2. 凭据放在 `~/.config/image-gen/` 下的环境变量文件，或用 `IMAGE_GEN_ENV` 指向自己的文件，变量为 `OPENAI_BASE_URL` / `OPENAI_API_KEY`（备用 `_2` … `_4`）。凭据不要放进本仓库。
 3. 免费检查可用模型：`node skills/image-gen/scripts/gen.mjs --models`。
 
-每次出图都会花钱：脚本强制要求 `--budget`，所有请求记录在 `~/.config/image-gen/requests.jsonl`。
+每次出图都会花钱：花费上限取 `--budget`，不传时取 `config.json` 的 `defaultBudget`；所有请求记录在 `~/.config/image-gen/requests.jsonl`。

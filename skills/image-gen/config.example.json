@@ -1,5 +1,6 @@
 {
   "defaultModel": "gpt-image-2.5-sunburst",
+  "defaultBudget": 5,
   "envFile": "/absolute/path/to/credentials-file",
   "price": {
     "relay-a.example.com": 0.05,

@@ -1,6 +1,6 @@
 # Draft prompts
 
-Use with the `image-gen` skill. Quote cost before calling. Use the harder model for anything with text in the image (all page drafts). Pass the reference screenshot with `--ref` when matching a reference site's system. Don't write aspect words in prompts when `--size` is set.
+Use with the `image-gen` skill. Use the harder model for anything with text in the image (all page drafts). Pass the reference screenshot with `--ref` when matching a reference site's system. Don't write aspect words in prompts when `--size` is set.
 
 Save each prompt as `tmp/design/vN/p/<nn>-<name>.txt` and generate with `--prompt-file`, so rounds are reproducible and diffs between rounds are visible.
 
@@ -46,6 +46,10 @@ Interaction storyboard, 4 frames in a row, same section shown at successive mome
 ```
 
 Useful interaction vocabulary: scroll-linked progress line, sticky scroll with swapping preview, typing prompt, step log advancing, count-up numbers, beam/connector flowing between cards, spotlight hover on panels, sliding tab pill, marquee of chips, orbiting tool icons, reading-progress TOC ring, back-to-top.
+
+## Directions first
+
+When the direction is open (new page, redesign), generate one overview image per direction (2 is usually enough, e.g. split layout vs centered card), let the user pick one, then generate detail images only for the chosen direction: desktop light/dark, mobile, key states. Don't detail every direction.
 
 ## Review loop
 

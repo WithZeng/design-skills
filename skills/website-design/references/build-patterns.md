@@ -54,6 +54,21 @@ Copy component source into `components/magicui/`, rewrite the `cn` import to the
 - Typed `useTranslations` namespaces only resolve two levels deep; use `useTranslations('Marketing.home')` with dotted keys.
 - Switching the default locale touches: locale config and prefixes, middleware/proxy redirects (old prefixes 308, cookie-preferred locale 307), client runtime locale (read `<html lang>`), localized links helper, hreflang `x-default`, sitemap, robots, and every e2e path.
 
+## Brand mark
+
+- One `BrandMark` component with the logo as inline SVG (same source as the logo file), sizes `md`/`lg`, optional wordmark. Inline means no image request, so it also renders on root error pages.
+- A black logo tile disappears on a dark background: add a 1px ring in dark mode only (`dark:ring-1 dark:ring-(--control-border)`).
+- Grep for letter placeholders (`>S<`, initials in rounded squares) and replace them all.
+
+## Auth pages (Clerk)
+
+- Locale-prefixed routes (`/zh-CN/signin`): pass the localized `path` and the localized `signUpUrl`/`signInUrl` to `<SignIn>`/`<SignUp>`. If `path` doesn't match the browser URL, the form renders blank.
+- Input borders are drawn with `box-shadow`, and Clerk's own style wins: override with `boxShadow: '0 0 0 1px var(--control-border) !important'` (focus: `var(--ring) !important`).
+- Mobile without a card border: give the card 1px horizontal padding and `overflow: visible`, or the input shadows get clipped at the edges.
+- Element styles accept media queries (`'@media (max-width: 639px)': {...}`) for a borderless, transparent card on phones.
+- Change titles, subtitles, placeholders and "use phone/email" links through `localization` (`signIn.start.*`, `signUp.start.*`, `formFieldInputPlaceholder__*`), with copy from the app's message files; hide `logoBox` when the page shows its own logo.
+- Layout that worked: header (logo + back to site), centered logo + form card, one-line pitch below, footer. Transform-only entrance (`translateY(8px)`), disabled under reduced motion.
+
 ## Dev pitfalls
 
 - Turbopack can serve stale global CSS after token edits: stop the dev server, delete `.next/dev` and `.next/cache`, restart.
