@@ -5,7 +5,7 @@ description: Design and build a marketing site, landing page, product homepage, 
 
 # Website design
 
-Lessons from the Scientify site redesign (2026-10): the design only landed after drafts were shown and approved, one page system was enforced on every section, and verification caught contrast and markup bugs that motion libraries introduce.
+Lessons from a real product site redesign (2026-10): the design only landed after drafts were shown and approved, one page system was enforced on every section, and verification caught contrast and markup bugs that motion libraries introduce.
 
 ## Workflow and gates
 
