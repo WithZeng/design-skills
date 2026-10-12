@@ -8,24 +8,24 @@ description: Generate or edit images with GPT Image models through the user's Op
 `scripts/gen.mjs` in this skill is a standalone, dependency-free Node script. Credentials and per-relay prices live outside any repo (see Credentials).
 
 ## Rules
-- Every call costs money. Before the first call, tell the user the model, the number of calls, the relay prices and the budget, and wait for a yes in chat. Always pass `--budget <usd>`; the script skips a relay whose price would exceed it.
-- Relays can differ a lot in price (see `config.json`). Quote the primary price; the backup is used only if the budget allows it. Add `--primary-only` when the budget was approved at the primary price.
-- Never print, echo, commit or paste the key; never copy it into a repo, manifest or shell profile. If the user shares a key in chat, say it is now in the transcript.
-- One image per call (`n=1`). A second retry of the same image needs the user's OK. Report calls made and estimated cost from `~/.config/image-gen/requests.jsonl`.
+- Generate directly; no price confirmation is needed. The spend cap is `--budget <usd>` or, when omitted, `defaultBudget` in `config.json`; the script skips a relay whose price would push the estimated spend over it.
+- Relays can differ a lot in price (see `config.json`); the backup is used only if the budget allows it. Add `--primary-only` to stay on the primary relay.
+- Errors: 404/429/5xx move on to the next relay; a network error retries the same relay once. Relays may bill failed requests, so they count against the budget.
+- Never print, echo, commit or paste the key; never copy it into a repo, manifest or shell profile. If the user shares a key in chat, say it is now in the transcript. Some setups have hooks that block any shell command mentioning env files: edit credential and config files with the Write/Edit tools, not heredocs or `echo`.
+- One image per call (`n=1`). After a batch, report calls made and estimated cost from `~/.config/image-gen/requests.jsonl`.
 - Generation is offline: save outputs in the project and commit them; never call the API at runtime or render time.
 
 ## Use
 ```bash
 node ~/.claude/skills/image-gen/scripts/gen.mjs --models                      # free: list image models per relay
-node ~/.claude/skills/image-gen/scripts/gen.mjs --prompt "…" --out assets/hero.png --budget 0.10
+node ~/.claude/skills/image-gen/scripts/gen.mjs --prompt "…" --out assets/hero.png
 ```
-Options: `--model`, `--size 1024x1024|1024x1536|1536x1024`, `--quality low|medium|high`, `--transparent`, `--ref <file>` (repeatable; edit/reference mode), `--prompt-file`, `--primary-only`, `--force`, `--probe`.
+Options: `--budget <usd>`, `--model`, `--size 1024x1024|1024x1536|1536x1024`, `--quality low|medium|high`, `--transparent`, `--ref <file>` (repeatable; edit/reference mode), `--prompt-file`, `--primary-only`, `--force`, `--probe`.
 
-- Models: default to the latest `gpt-image-2.5` series and pick by task difficulty. Don't use older models (`gpt-image-2`, `gpt-image-1.x`) unless the user asks.
-  - `gpt-image-2.5-sunburst`: harder tasks, such as characters, identity consistency across images, `--ref` edits, complex compositions, text inside the image. The script uses it when `--model` is omitted.
-  - `gpt-image-2.5-flare`: easier tasks, such as backgrounds, props, icons, simple scenes. Pass `--model gpt-image-2.5-flare`.
-  - If a flare result misses on a hard prompt, escalate to sunburst (a retry needs the user's OK). Per-request price is set by the relay, not the model: see `config.json`.
-  - Run `--models` first; a model may not exist on every relay.
+- Models: run `--models` first and use the newest image models the relays offer; a model may not exist on every relay. Don't use older generations unless the user asks.
+  - Pick by task difficulty: the stronger model for characters, identity consistency, `--ref` edits, complex compositions and text inside the image; the lighter one for backgrounds, props, icons and simple scenes. If the lighter one misses, retry with the stronger one.
+  - The script uses `--model`, else `defaultModel` in `config.json`. At the time of writing these were `gpt-image-2.5-sunburst` (stronger) and `gpt-image-2.5-flare` (lighter).
+  - Per-request price is set by the relay, not the model: see `config.json`.
 - Don't put aspect words ("9:16", "portrait") in the prompt when `--size` is set; the model follows the words over `size`.
 - `--transparent`: check the result really has alpha, not a painted checkerboard. A 4xx about `background` means the model has no transparency support: generate on a flat color and key it out.
 - Look at the output (Read the PNG) before reporting it done.

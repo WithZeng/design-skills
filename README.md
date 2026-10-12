@@ -4,7 +4,7 @@ Claude Code 的两个设计类 skill，来自一次产品官网改版的实战�
 
 | Skill | 用途 |
 | --- | --- |
-| [`website-design`](skills/website-design/SKILL.md) | 官网 / 落地页从出图稿到上线的完整流程：先出图稿确认、统一页面系统、Next.js + Tailwind + Motion + Magic UI 实现、i18n 与无障碍 / e2e 验证。附 UI 参考站清单。 |
+| [`website-design`](skills/website-design/SKILL.md) | 官网 / 落地页从出图稿到上线的完整流程：先出图稿确认、统一页面系统、按需求推导的美术与动效方向、按项目挑选组件库和动画库、i18n 与无障碍 / e2e 验证。附 UI 参考站清单。 |
 | [`image-gen`](skills/image-gen/SKILL.md) | 通过 OpenAI 兼容中转调用 GPT Image 模型出图，无依赖 Node 脚本，带预算上限与请求日志。`website-design` 用它出图稿。 |
 
 ## 安装
@@ -21,4 +21,4 @@ ln -s ~/Documents/design-skills/skills/image-gen ~/.claude/skills/image-gen
 2. 凭据放在 `~/.config/image-gen/` 下的环境变量文件，或用 `IMAGE_GEN_ENV` 指向自己的文件，变量为 `OPENAI_BASE_URL` / `OPENAI_API_KEY`（备用 `_2` … `_4`）。凭据不要放进本仓库。
 3. 免费检查可用模型：`node skills/image-gen/scripts/gen.mjs --models`。
 
-每次出图都会花钱：脚本强制要求 `--budget`，所有请求记录在 `~/.config/image-gen/requests.jsonl`。
+每次出图都会花钱：花费上限取 `--budget`，不传时取 `config.json` 的 `defaultBudget`；所有请求记录在 `~/.config/image-gen/requests.jsonl`。

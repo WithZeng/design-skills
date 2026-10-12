@@ -4,12 +4,12 @@ Run all of these before committing; report failures with the raw error lines.
 
 ## Visual
 
-- Compare each built section against its approved draft in the browser pane at 1440 wide.
-- Viewports 390 / 1440 / 2048: `document.documentElement.scrollWidth === innerWidth` on every page (no horizontal scroll), `h1` visible, full-page screenshots into `tmp/`.
+- Compare each built section against its approved draft in the browser at the draft's width.
+- A phone, a laptop and a wide viewport (e.g. 390 / 1440 / 2048, or the project's breakpoints): `document.documentElement.scrollWidth === innerWidth` on every page (no horizontal scroll), `h1` visible, full-page screenshots into `tmp/`.
 - Toggle reduced motion and confirm content is fully visible without animation.
-- Check both locales on every page: no strings from the other language (mock windows and transcripts included).
+- Multilingual sites: check every locale on every page: no strings from the other language (mock windows and transcripts included).
 
-## Accessibility (axe via Playwright)
+## Accessibility (axe through the project's e2e tool)
 
 Fail on `serious`/`critical`. Typical findings after a motion-heavy redesign:
 
@@ -23,7 +23,7 @@ Fail on `serious`/`critical`. Typical findings after a motion-heavy redesign:
 ## E2E
 
 - Update tests for replaced pages instead of deleting coverage; locale-specific assertions go to the prefixed routes.
-- Smooth scrolling breaks immediate visibility checks: use `expect.poll(...)`.
+- Smooth scrolling breaks immediate visibility checks: poll or wait for the element (e.g. Playwright `expect.poll`).
 - When a test fails on something the redesign didn't touch, check `git log` on the component; fix stale assertions, and spin off real bugs as separate tasks.
 - A long screenshot test may time out under parallel load on the dev server; rerun it alone before treating it as a failure.
 
@@ -31,4 +31,4 @@ Fail on `serious`/`critical`. Typical findings after a motion-heavy redesign:
 
 - Type check, lint, production build.
 - Run the project's wording/copy checker on changed copy files; only fix warnings introduced by this change.
-- SEO: canonical/hreflang per route, sitemap URL count, robots disallow for app routes in every locale.
+- SEO: canonical per route, hreflang on multilingual sites, sitemap URL count, and robots rules for any app routes sharing the domain.
