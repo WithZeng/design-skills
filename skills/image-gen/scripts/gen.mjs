@@ -79,7 +79,8 @@ if (!Number.isFinite(budget) || budget <= 0) die('no budget: pass --budget <usd>
 const outPath = path.resolve(out);
 if (existsSync(outPath) && !flag('--force')) die(`${outPath} exists (use --force to overwrite)`);
 
-const model = val('--model') ?? cfg.defaultModel ?? 'gpt-image-2.5-sunburst';
+const model = val('--model') ?? cfg.defaultModel;
+if (!model) die('no model: pass --model <id> or set "defaultModel" in config.json (list models with --models)');
 const size = probe ? '1024x1024' : (val('--size') ?? '1024x1024');
 const quality = probe ? 'low' : (val('--quality') ?? 'high');
 const refs = vals('--ref');

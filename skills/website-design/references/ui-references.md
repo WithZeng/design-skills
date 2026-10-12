@@ -78,8 +78,8 @@ Typewolf (type pairings), Coolors (palettes), Dribbble and Behance (community), 
 
 When the built-in browser can't open a site, use Playwright with the system Chrome (`channel: 'chrome'`):
 
-- Viewport 1440×900, `colorScheme: 'dark'` if the product is dark; `deviceScaleFactor: 2` for crops you will show.
+- A desktop viewport (e.g. 1440×900), the colour scheme that matches the project; `deviceScaleFactor: 2` for crops you will show.
 - Wait for load plus 3–4 s, scroll to the product screenshot area (`page.mouse.wheel`), then capture. Decline cookie banners ("Reject all").
 - Use the site's own pages for components (docs pages with a live preview), not search results.
-- Paste all captures into one contact sheet (PIL grid) to pick from, then copy the chosen ones to `tmp/design/vN-refs/picks/` with numbered names (`1-linear.png`, …) and show them in the file viewer.
+- Paste all captures into one contact sheet (PIL grid) to pick from, then copy the chosen ones to a `picks/` folder in the round's scratch folder with numbered names (`1-<site>.png`, …) and show them in the file viewer.
 - Present: what each image shows and what to borrow, then 2–3 combos (references per area, effect, size of change) with one recommended.

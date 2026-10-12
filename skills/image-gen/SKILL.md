@@ -22,11 +22,10 @@ node ~/.claude/skills/image-gen/scripts/gen.mjs --prompt "…" --out assets/hero
 ```
 Options: `--budget <usd>`, `--model`, `--size 1024x1024|1024x1536|1536x1024`, `--quality low|medium|high`, `--transparent`, `--ref <file>` (repeatable; edit/reference mode), `--prompt-file`, `--primary-only`, `--force`, `--probe`.
 
-- Models: default to the latest `gpt-image-2.5` series and pick by task difficulty. Don't use older models (`gpt-image-2`, `gpt-image-1.x`) unless the user asks.
-  - `gpt-image-2.5-sunburst`: harder tasks, such as characters, identity consistency across images, `--ref` edits, complex compositions, text inside the image. The script uses it when `--model` is omitted.
-  - `gpt-image-2.5-flare`: easier tasks, such as backgrounds, props, icons, simple scenes. Pass `--model gpt-image-2.5-flare`.
-  - If a flare result misses on a hard prompt, escalate to sunburst (a retry needs the user's OK). Per-request price is set by the relay, not the model: see `config.json`.
-  - Run `--models` first; a model may not exist on every relay.
+- Models: run `--models` first and use the newest image models the relays offer; a model may not exist on every relay. Don't use older generations unless the user asks.
+  - Pick by task difficulty: the stronger model for characters, identity consistency, `--ref` edits, complex compositions and text inside the image; the lighter one for backgrounds, props, icons and simple scenes. If the lighter one misses, retry with the stronger one.
+  - The script uses `--model`, else `defaultModel` in `config.json`. At the time of writing these were `gpt-image-2.5-sunburst` (stronger) and `gpt-image-2.5-flare` (lighter).
+  - Per-request price is set by the relay, not the model: see `config.json`.
 - Don't put aspect words ("9:16", "portrait") in the prompt when `--size` is set; the model follows the words over `size`.
 - `--transparent`: check the result really has alpha, not a painted checkerboard. A 4xx about `background` means the model has no transparency support: generate on a flat color and key it out.
 - Look at the output (Read the PNG) before reporting it done.

@@ -93,7 +93,7 @@ Implement the art direction chosen in the drafts (SKILL.md, "Art direction"):
 
 Example from one project (for illustration only): a product window in perspective that played a real task, tilted with the pointer and flattened on scroll. Another product may need something entirely different.
 
-## i18n (next-intl)
+## i18n (multilingual sites; examples use next-intl)
 
 - All copy in message files, including mock UI labels, demo tasks (`t.raw` arrays) and translated demo transcripts (`conversation.en.json` next to the original; keep commands, outputs and file names unchanged and say so in one line).
 - Inline emphasis via rich tags: `"Screened <n>24</n> / 186"` + `t.rich(key, { n: c => <CountUp/> })`. Passing a function as a plain value fails.
@@ -102,20 +102,20 @@ Example from one project (for illustration only): a product window in perspectiv
 
 ## Brand mark
 
-- One `BrandMark` component with the logo as inline SVG (same source as the logo file), sizes `md`/`lg`, optional wordmark. Inline means no image request, so it also renders on root error pages.
-- A black logo tile disappears on a dark background: add a 1px ring in dark mode only (`dark:ring-1 dark:ring-(--control-border)`).
-- Grep for letter placeholders (`>S<`, initials in rounded squares) and replace them all.
+- One brand-mark component with the logo as inline SVG (same source as the logo file), a few fixed sizes, optional wordmark. Inline means no image request, so it also renders on root error pages.
+- A logo whose fill matches the background disappears (e.g. a black tile on a dark theme): add a thin ring or outline in that theme only.
+- Search for letter placeholders (initials in rounded squares) and replace them all.
 
-## Auth pages (Clerk)
+## Auth pages (hosted widgets; examples from Clerk)
 
 - Locale-prefixed routes (`/zh-CN/signin`): pass the localized `path` and the localized `signUpUrl`/`signInUrl` to `<SignIn>`/`<SignUp>`. If `path` doesn't match the browser URL, the form renders blank.
 - Input borders are drawn with `box-shadow`, and Clerk's own style wins: override with `boxShadow: '0 0 0 1px var(--control-border) !important'` (focus: `var(--ring) !important`).
 - Mobile without a card border: give the card 1px horizontal padding and `overflow: visible`, or the input shadows get clipped at the edges.
 - Element styles accept media queries (`'@media (max-width: 639px)': {...}`) for a borderless, transparent card on phones.
 - Change titles, subtitles, placeholders and "use phone/email" links through `localization` (`signIn.start.*`, `signUp.start.*`, `formFieldInputPlaceholder__*`), with copy from the app's message files; hide `logoBox` when the page shows its own logo.
-- Layout that worked: header (logo + back to site), centered logo + form card, one-line pitch below, footer. Transform-only entrance (`translateY(8px)`), disabled under reduced motion.
+- Layout comes from the drafts like any page (one project chose a centered card with a back-to-site header). Keep the entrance transform-only and off under reduced motion.
 
-## Dev pitfalls
+## Dev pitfalls (Next.js examples)
 
 - Turbopack can serve stale global CSS after token edits: stop the dev server, delete `.next/dev` and `.next/cache`, restart.
 - Don't run `next build` while the dev server writes `.next`.
