@@ -4,7 +4,7 @@ Claude Code 的两个设计类 skill，来自一次产品官网改版的实战�
 
 | Skill | 用途 |
 | --- | --- |
-| [`website-design`](skills/website-design/SKILL.md) | 官网 / 落地页从出图稿到上线的完整流程：先出图稿确认、统一页面系统、Next.js + Tailwind + Motion + Magic UI 实现、i18n 与无障碍 / e2e 验证。附 UI 参考站清单。 |
+| [`website-design`](skills/website-design/SKILL.md) | 官网 / 落地页从出图稿到上线的完整流程：先出图稿确认、统一页面系统、按需求推导的美术与动效方向、按项目挑选组件库和动画库、i18n 与无障碍 / e2e 验证。附 UI 参考站清单。 |
 | [`image-gen`](skills/image-gen/SKILL.md) | 通过 OpenAI 兼容中转调用 GPT Image 模型出图，无依赖 Node 脚本，带预算上限与请求日志。`website-design` 用它出图稿。 |
 
 ## 安装

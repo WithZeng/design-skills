@@ -31,37 +31,37 @@ Access checked 2026-10-12 with an automated browser: Page Flows and Perplexity s
 ## AI chat and agent UI
 
 - **AI Elements** (elements.ai-sdk.dev): shadcn-registry components for AI apps: Tool (6 call states), Reasoning (auto-collapse after streaming), Plan, Confirmation (approve/reject), Artifact, Attachments, Prompt Input. Kibo UI's AI components now redirect here.
-- Pair with Linear/Cursor shots for layout and Magic UI Animated List for items arriving one by one.
+- Pair with Linear/Cursor shots for layout.
 
 ## Component sources (build)
 
 - **21st.dev**: community marketplace for the shadcn ecosystem, with live previews.
 - **shadcn.io** (6,000+ blocks), **Shadcnblocks** (has a Figma library).
-- **Magic UI**: free animated components; this skill's default, copied as source.
+- **Magic UI**: free animated components, installable as source.
 - **Aceternity UI**: animation-forward; sources disagree on free vs paid, check its license.
 - **Tailark**: marketing sections. **ReUI / Origin UI / Kibo UI**: app and dashboard components.
 - **UINice** (uinice.com): curated directory of UI kits with real code (169 sites on 2026-10-10; weekly Hot 100 chart and Recipes were still empty). It only links out, so each kit's license applies.
 - Rules: one base component system (shadcn) and one animation library (Motion) per project; the sources above add components into it as source, so mixing them is fine. Check the licence ("Free" does not mean commercial use is allowed) and the date of the last commit, not the star count.
 
-## Interaction → component
+## Interaction patterns
 
-Reach for these before hand-writing an effect. Install commands: build-patterns, "Component sources: install".
+Decide the pattern first, then take the component from the libraries chosen for this project (build-patterns, "Choosing libraries"). Examples are from different libraries and only show what to look for.
 
-| Interaction | Use |
-| --- | --- |
-| Items arriving (deliverables, logs, notifications) | Magic UI Animated List; Motion `staggerChildren` |
-| Running / in-progress | Magic UI Border Beam on the active card, Animated Shiny Text or AI Elements Shimmer for "Thinking…", spinner → check |
-| Agent tool calls, reasoning, plans, approvals | AI Elements Tool, Reasoning, Plan, Confirmation |
-| Generated output | AI Elements Artifact; file card entering with `AnimatePresence` |
-| Numbers changing (usage, counts) | Magic UI Number Ticker / CountUp (render final value on the server) |
-| Tabs, nav, segmented control | Motion `layoutId` sliding pill |
-| Hover on cards and panels | cursor spotlight (CSS variables), border brighten; Aceternity 3D card for marketing only |
-| Section reveal on scroll | Magic UI Blur Fade (transform only above the fold), `useInView` |
-| Connections between steps or tools | Magic UI Animated Beam, Orbiting Circles |
-| Scroll progress, reading position | Magic UI Scroll Progress, TOC ring |
-| Logos, tags, examples in a row | Magic UI Marquee |
-| Expand / collapse, drawers, dialogs | Motion `layout` + `AnimatePresence`; spring for drawers |
-| Hero product demo | 3D tilted live window (build-patterns, "Hero art direction") |
+| Interaction | Pattern | Examples |
+| --- | --- | --- |
+| Items arriving (deliverables, logs, notifications) | staggered entrance, newest on top | Magic UI Animated List, Motion stagger, AutoAnimate |
+| Running / in progress | live indicator on the active item, shimmer on status text, spinner → check | Magic UI Border Beam / Animated Shiny Text, AI Elements Shimmer |
+| Agent tool calls, reasoning, plans, approvals | collapsible step with status, auto-collapse when done | AI Elements Tool / Reasoning / Plan / Confirmation |
+| Generated output | result card entering where the spinner was | AI Elements Artifact, any card + enter/exit animation |
+| Numbers changing | count up when in view, final value server-rendered | Magic UI Number Ticker, a small CountUp |
+| Tabs, nav, segmented control | indicator sliding between items | Motion `layoutId`, GSAP Flip, CSS anchor positioning |
+| Hover on cards and panels | spotlight, border brighten, slight lift | CSS variables + pointer events, Aceternity card effects (marketing) |
+| Section reveal on scroll | rise in once when in view | Motion `whileInView`, GSAP ScrollTrigger, Magic UI Blur Fade |
+| Connections between steps or tools | animated connector or beam | Magic UI Animated Beam, SVG path animation |
+| Scroll progress, reading position | progress bar or TOC ring | Magic UI Scroll Progress, scroll-linked CSS (`animation-timeline: scroll()`) |
+| Logos, tags, examples in a row | marquee that pauses on hover | Magic UI Marquee, CSS keyframes |
+| Expand / collapse, drawers, dialogs | animate size and presence, spring for drawers | base system's Collapsible/Sheet + layout animation |
+| Signature piece | from the art direction (SKILL.md) | Motion, GSAP, React Three Fiber, Lottie, Rive |
 
 ## Helpers
 
@@ -69,10 +69,10 @@ Typewolf (type pairings), Coolors (palettes), Dribbble and Behance (community), 
 
 ## Suggested combos
 
-- SaaS marketing site: Godly + Land-book for style, Refero for realistic product UI crops, Magic UI or 21st.dev for components.
+- SaaS marketing site: Godly + Land-book for style, Refero for realistic product UI crops, an animated component source that fits the stack (e.g. Magic UI, 21st.dev).
 - Bold or experimental look: Awwwards + Godly.
 - Mobile app or flows: Mobbin or Page Flows.
-- AI chat / agent workbench: Linear + Cursor product shots for structure, AI Elements for message parts, Magic UI Animated List for motion. Keep Aceternity and Awwwards-style effects out of work screens.
+- AI chat / agent workbench: Linear + Cursor product shots for structure, AI Elements (or the project's own components) for message parts, a staggered list for arriving items. Keep Aceternity and Awwwards-style effects out of work screens.
 
 ## Capturing references
 

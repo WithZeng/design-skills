@@ -2,7 +2,7 @@
 
 ## Tokens
 
-Define site colours once as Tailwind v4 tokens and use only them in page code:
+Define colours once as tokens and use only them in page code. Example from a monochrome dark site (values come from the approved drafts, not from here):
 
 ```css
 @theme inline {
@@ -23,7 +23,7 @@ If the app also has a light theme, scope the site look with a wrapper class (`.s
 
 ## Shared primitives
 
-Build these once, then compose every page from them:
+Build the shared pieces once, then compose every page from them. Example set from one site:
 
 - `SitePage` (header, footer, scroll progress, back-to-top, `overflow-x-clip` root)
 - `SiteContainer`, `SiteHero`, `SiteSection` (title + reveal), `SitePill`, `SiteCta`
@@ -33,56 +33,65 @@ Build these once, then compose every page from them:
 
 Keep files under the repo's max-lines limit by splitting mock UIs (`hero-window`, `panel-ui`, `cloud-ui`, ...).
 
-## Component sources: install
+## Choosing libraries
 
-All of these install as source through the shadcn CLI, so they use the project's `components.json` aliases and tokens. Run from the app directory; review the diff and re-token hard-coded colours before committing.
+Choose per project; the tables list candidates, not requirements. Start from what the project already uses.
 
-| Source | Command (from the component's docs page) | Lands in |
-| --- | --- | --- |
-| Magic UI | `npx shadcn@latest add @magicui/border-beam` | `components/magicui/` (set the path when prompted) |
-| AI Elements | `npx ai-elements@latest add tool` or `npx shadcn@latest add @ai-elements/tool` | `components/ai-elements/` |
-| Aceternity UI | `npx shadcn@latest add @aceternity/3d-card` | `components/ui/` (check the licence first) |
-| 21st.dev | copy the `npx shadcn@latest add "https://21st.dev/r/…"` command shown on the component page | `components/ui/` |
+Criteria, in order: fits the framework and rendering model (SSR, RSC, Vue/Svelte); matches the base component system and token approach; covers the interactions in the approved storyboards; licence allows commercial use; maintained (recent commits, open issues answered); bundle cost and tree-shaking; accessibility (keyboard, focus, ARIA) and reduced-motion support.
 
-- If the CLI can't run, copy the source by hand: rewrite the `cn` import to the project's utils path and add the keyframes it needs (marquee, orbit, shine) to `@theme`.
-- Delete components you end up not using. Proven Magic UI set: animated-beam, animated-list, border-beam, marquee, orbiting-circles, blur-fade, scroll-progress, number-ticker, animated-shiny-text.
-- Components that animate with Motion must use the project's import (`motion/react`, `m.*` under `LazyMotion`); rewrite them if they import `framer-motion`.
+| Need | Candidates (pick one that fits) |
+| --- | --- |
+| Base components | shadcn/ui (React), Radix / Base UI primitives, Ant Design (admin), shadcn-vue / Naive UI / Element Plus (Vue) |
+| Animated marketing components | Magic UI, Aceternity UI, 21st.dev community components, Tailark sections |
+| App / dashboard components | ReUI, Origin UI, Kibo UI, Tremor or Recharts for charts |
+| AI chat / agent UI | AI Elements, or the project's own message components |
+| UI animation | Motion (React/Vue/JS), CSS transitions and keyframes, AutoAnimate for simple list changes |
+| Scroll-driven storytelling | GSAP + ScrollTrigger, Lenis for smooth scroll; Motion `useScroll` for lighter cases |
+| 3D | React Three Fiber + Drei, Spline embeds, CSS 3D transforms for simple depth |
+| Designer-made animation | Lottie / dotLottie, Rive |
 
-## Motion basics
+Write the choice and the reason into the plan; the user confirms it with the drafts.
 
-- Setup: `LazyMotion features={domAnimation}` once at the root and `m.div` etc. in components (smaller bundle); `<MotionConfig reducedMotion="user">` around pages.
-- Tokens: keep durations and easings in one file (e.g. `fast 150ms / base 250ms / slow 400ms`, `ease-standard cubic-bezier(0.22, 1, 0.36, 1)`) and mirror them in CSS variables; don't write ad-hoc numbers.
-- Presets: define a few variants once (`fadeUp`, `staggerRise` with a 40 ms step, `scaleIn`) and reuse them; lists use a parent `staggerChildren` + child variants.
-- Enter/exit: wrap conditional UI in `AnimatePresence` (`mode="wait"` for swaps such as tab content or a result card replacing a spinner).
-- Layout: `layout` for size/position changes (expanding cards, reordering); `layoutId` for an indicator moving between items (tabs, nav, segmented control).
-- Scroll: `useInView` (once) to trigger reveals and counters; `useScroll` + `useTransform` for scroll-linked progress, parallax and flattening.
-- Pointer: `useMotionValue` + `useSpring` for tilt, spotlight and magnetic effects; CSS variables (`--spot-x`) for cheap per-panel spotlights.
-- Springs for physical things (pills, drawers, toggles: `stiffness ~380, damping ~32`); tweens with the standard ease for fades and reveals.
+## Installing components
 
-## Motion rules
+- Prefer installing as editable source: the base system's registry/CLI (e.g. `npx shadcn@latest add <registry>/<name>`) or copying the source. Take the exact command from the component's docs page; registries change.
+- After install: point imports at the project's utils and animation library, replace hard-coded colours with tokens, add needed keyframes to the theme, and review the diff.
+- Delete components you end up not using.
 
-- Wrap pages in `<MotionConfig reducedMotion="user">`; CSS smooth scroll gets a `prefers-reduced-motion` override.
-- Entrances above the fold: transform only (`slide-in-from-bottom`), no opacity fade.
+## Animation implementation
+
+Library-agnostic; map each item to the chosen library's API.
+
+- Setup: load the library once at the root with its lightest bundle option; set the global reduced-motion behaviour there.
+- Tokens: durations and easings in one place, mirrored in CSS variables; no ad-hoc numbers in components.
+- Presets: a few shared entrances/exits (rise, fade-up, scale-in, stagger) reused everywhere.
+- Enter/exit: animate conditional UI out before it unmounts; swap content (tabs, spinner → result) without layout jumps.
+- Layout: animate size/position changes and moving indicators (tabs, nav pills) with the library's layout/FLIP feature.
+- Scroll: trigger reveals and counters once when in view; use scroll-linked values for progress, parallax and depth.
+- Pointer: smooth pointer-driven effects (tilt, spotlight, magnetic) with springs or CSS variables.
+- Springs for physical movement (pills, drawers, toggles); eased tweens for fades and reveals.
+
+## Animation rules
+
+- Global reduced-motion handling; CSS smooth scroll gets a `prefers-reduced-motion` override.
+- Entrances above the fold: transform only, no opacity fade.
 - Active/inactive states: change text colour, never lower opacity.
-- Shared-layout pills (`layoutId`): pill `absolute inset-0`, label `<span className="relative">` after it.
-- Lists: `<ol><li><BlurFade>…</BlurFade></li></ol>`; overlays such as beam SVGs go in a wrapper `div` next to the list, not inside it.
-- `CountUp`: initial state = final value (correct SSR and no-JS), reset to 0 and animate on first in-view.
-- Scroll-linked effects (`useScroll`) for hero flatten/parallax; springs for timeline fills.
+- Sliding pills: pill `absolute inset-0`, label in a `relative` span after it.
+- Lists: animate inside `<li>`; overlays such as beam SVGs go in a wrapper next to the list, not inside it.
+- Counters: initial state = final value (correct SSR and no-JS), reset and animate on first in-view.
 
-## Hero art direction: 3D, live product window
+## Building the signature piece
 
-The hero is the one place for a dimensional, moving piece. The recipe that worked (a tilted app window running a real task):
+Implement the art direction chosen in the drafts (SKILL.md, "Art direction"):
 
-- **Stage**: wrapper with `perspective: 2200px`; inner `m.div` with `transformStyle: 'preserve-3d'` holding the shared `AppWindow` mock (traffic lights, title "Research task · Example", the product's real sidebar).
-- **Tilt**: resting angle from scroll, `rotateX` 14°→2° and `rotateY` -16°→-3° over `scrollYProgress` 0–0.7 (`useScroll({ target, offset: ['start start', 'end start'] })`), plus `scale` 1→0.96, so the window flattens as the user scrolls.
-- **Parallax**: window-level `pointermove` → normalized `px/py` motion values → `useSpring(stiffness 120, damping 20)` → add ±6° to the rotation.
-- **Light**: a 520px radial glow (`rgba(255,255,255,0.10)` → transparent) behind the window that follows the same springs; a soft long shadow (`0 60px 120px -40px rgba(255,255,255,0.12)`). No coloured gradients in a monochrome system.
-- **Live content**: type the prompt character by character (~28 ms), then complete steps one by one (~1.1 s each: spinner → check that scales in → timing), then the deliverable card enters with `AnimatePresence`, hold ~3 s and switch to the next example task. Step labels in mono, file names UPPERCASE_WITH_UNDERSCORES.
-- **Control**: example-task tabs under the window with a `layoutId` pill; clicking one restarts the sequence.
-- **Reduced motion**: rotation 0, full prompt, all steps done, no timers.
-- **Draft prompt**: describe it as "the one 3D element: the app window tilted in perspective, floating, soft glow behind it", with the exact UI text inside.
+- Build it from the same product mock and tokens as the rest of the page, so it reads as the same product.
+- Separate the layers: static content, the motion driver (scroll, pointer, time, click) and the visual response, so each can be tuned or turned off.
+- Tune values in the browser against the approved draft and storyboard; record the final values as named constants, not inline numbers.
+- Content in demos is real and i18n'd; timed sequences pause off-screen and when the tab is hidden.
+- Reduced motion and mobile get their own designed state (usually the finished, flat version), not a broken animation.
+- Check performance: animate only transform/opacity/filters on composited layers, no layout thrash, no CLS.
 
-Below the hero, dimension comes from subtle means only: spotlight panels, border beams on the highlighted card, scroll-linked progress lines, marquees of chips.
+Example from one project (for illustration only): a product window in perspective that played a real task, tilted with the pointer and flattened on scroll. Another product may need something entirely different.
 
 ## i18n (next-intl)
 

@@ -1,6 +1,6 @@
 ---
 name: website-design
-description: Design and build a marketing site, landing page, product homepage, or an app's UI and login/signup pages end to end — reference screenshots and image-gen drafts the user approves first, then a unified page system, Next.js + Tailwind + Motion + Magic UI implementation, i18n, and accessibility/e2e verification. Use when the user asks to design, redesign, restyle or polish an official website, landing page, homepage or its subpages, an app's screens (workbench, chat/agent UI, dashboards) or its auth pages, asks for UI reference sites, or says the current design looks bad, fragmented or lacks motion.
+description: Design and build a marketing site, landing page, product homepage, or an app's UI and login/signup pages end to end — reference screenshots and image-gen drafts the user approves first, then a unified page system, an art direction and motion plan derived from the brief, component and animation libraries chosen to fit the project, i18n, and accessibility/e2e verification. Use when the user asks to design, redesign, restyle or polish an official website, landing page, homepage or its subpages, an app's screens (workbench, chat/agent UI, dashboards) or its auth pages, asks for UI reference sites, or says the current design looks bad, fragmented or lacks motion.
 ---
 
 # Website design
@@ -26,7 +26,7 @@ A page feels like one piece when every section reuses the same module. Write the
 - ONE background colour top to bottom. No alternating white/gray bands, no section gradients.
 - ONE panel module: same radius, fill, 1px border, padding, width. Inside: short text block + product UI crop that bleeds off the panel edge; alternate left/right.
 - ONE heading size for all section titles, medium weight, left-aligned; small muted body text; generous spacing.
-- Only the hero gets a dimensional, moving piece: a 3D tilted app window running a live example task, tilting with the pointer and flattening on scroll (recipe: build-patterns, "Hero art direction"). Everything below stays flat in layout but still responds to interaction.
+- One signature piece carries the art direction (usually in the hero); everything else stays quieter in layout but still responds to interaction. What that piece is comes from the brief, not a template: see "Art direction" below.
 - All product UI shown is the SAME app (same sidebar, theme, data), so the page reads as one product.
 - Restrained palette (monochrome worked); logo keeps its original colours. Use the real brand logo everywhere (inline SVG), never a letter-in-a-square placeholder.
 - Content details: realistic data (real paper titles, plausible numbers and timings); file names UPPERCASE_WITH_UNDERSCORES, no extensions, type shown by icon; no lorem, no fake testimonials or stats, no buzzword slogans.
@@ -39,24 +39,37 @@ The same gates apply inside a product, with different references and tokens:
 - Reuse the app's own tokens and components; don't import the marketing site's palette. Fix a small set of shared primitives first (panel, page container widths, dialog widths, segmented control), then restyle screens with them.
 - Login/signup with a hosted auth widget (e.g. Clerk): style it through its appearance API and localization, and check the pitfalls in build-patterns ("Auth pages").
 
+## Art direction (dimension and motion)
+
+Design the dimensional and moving parts from the site's own requirements, then draft them like any other visual. Don't reuse a previous site's recipe or fixed values.
+
+1. **Derive it from the brief.** What is the one idea a visitor must get (the product in action, a transformation, scale, precision, calm)? Who is the audience, what is the brand tone, what devices and performance budget? The signature piece should show that idea, ideally with the real product.
+2. **Explore 2–3 options** that fit the page system and tone, e.g. a product window in perspective, layered depth with parallax, a scroll-driven scene that tells the workflow, an illustration or 3D object, a data/visual metaphor, or a calm flat page with rich micro-interaction. Draft each as an image and, for motion, as a storyboard; the user picks.
+3. **Specify, then build.** Write down for the chosen option: what moves, what triggers it (load, scroll, pointer, time, click), the resting state, the reduced-motion version, and the mobile version. Tune angles, timings and intensities against the approved drafts in the browser, not from a template.
+4. **Check the cost.** It must not hurt readability, contrast, layout stability or load time; it must degrade gracefully without JS and under reduced motion.
+
 ## Rich interaction, from libraries
 
-Static pages feel cheap. Use the component and animation libraries actively to make every interaction feel alive:
+Static pages feel cheap. Use component and animation libraries actively to make every interaction feel alive:
 
 - Every state gets feedback: hover, press, focus, loading/running, success/error, appear/disappear, layout change. Plan these in the interaction storyboards, not as an afterthought.
-- Prefer a ready component (Magic UI, AI Elements, shadcn blocks, 21st.dev) over a hand-written effect; pick from the interaction → component table in [references/ui-references.md](references/ui-references.md). Install and Motion usage: [references/build-patterns.md](references/build-patterns.md).
-- Product demos move: typed prompts, steps advancing, results arriving, numbers counting, tabs swapping scenes.
-- Keep it purposeful: motion explains state or draws the eye to what changed. Heavy decorative effects (3D cards, particles, aurora backgrounds) stay on marketing pages, never in work screens. Respect reduced motion everywhere.
+- Prefer a well-built ready component over a hand-written effect. Map each interaction to a pattern, then pick the component from the libraries chosen for this project ([references/ui-references.md](references/ui-references.md), "Interaction patterns").
+- Product demos move: real tasks progressing, results arriving, numbers changing, scenes switching.
+- Keep it purposeful: motion explains state or draws the eye to what changed. Heavy decorative effects belong on marketing pages, not in work screens. Respect reduced motion everywhere.
 
-## Stack defaults
+## Choosing libraries
 
-Use the project's stack. For new sites: Next.js + Tailwind v4 + shadcn/ui + lucide-react, **Motion** as the only animation library, Magic UI / AI Elements / Aceternity / 21st.dev components **installed as source** through the shadcn CLI (not as npm dependencies). One base component system, one animation library.
+Pick component and animation libraries for the project; none is mandatory.
+
+- Existing project: use what it already has; add a library only for a gap, and never one that overlaps an existing one.
+- New project: choose by project type, framework and needs (criteria and candidates in [references/build-patterns.md](references/build-patterns.md), "Choosing libraries"). Keep one base component system and one main animation library unless there is a clear reason.
+- Prefer sources that install as editable source into the project (registry/CLI or copy) over opaque packages, so components follow the project's tokens.
 
 ## Hard-won rules (details in build-patterns)
 
 - Muted text must pass 4.5:1 on the panel fill (on #121212, faint gray ≥ #8a8a8a).
 - No opacity fade on above-the-fold entrances and no opacity dimming for "inactive" states — axe audits mid-animation and flags contrast. Use transform-only entrances and colour changes.
-- Motion wrappers must not sit between `<ul>/<ol>` and `<li>`; animate inside the `<li>`.
+- Animation wrappers must not sit between `<ul>/<ol>` and `<li>`; animate inside the `<li>`.
 - Sliding pills: put the label in a `relative` span above an absolute pill; no `-z-10` + `isolate`.
 - Counters render the final value on the server and animate only when in view.
 - Every visible string goes through i18n, including demo UI inside mock windows and replayed sessions.
