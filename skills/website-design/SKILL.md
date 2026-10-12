@@ -26,7 +26,7 @@ A page feels like one piece when every section reuses the same module. Write the
 - ONE background colour top to bottom. No alternating white/gray bands, no section gradients.
 - ONE panel module: same radius, fill, 1px border, padding, width. Inside: short text block + product UI crop that bleeds off the panel edge; alternate left/right.
 - ONE heading size for all section titles, medium weight, left-aligned; small muted body text; generous spacing.
-- Only the hero gets a special effect (e.g. a 3D tilted app window). Everything below stays flat.
+- Only the hero gets a dimensional, moving piece: a 3D tilted app window running a live example task, tilting with the pointer and flattening on scroll (recipe: build-patterns, "Hero art direction"). Everything below stays flat in layout but still responds to interaction.
 - All product UI shown is the SAME app (same sidebar, theme, data), so the page reads as one product.
 - Restrained palette (monochrome worked); logo keeps its original colours. Use the real brand logo everywhere (inline SVG), never a letter-in-a-square placeholder.
 - Content details: realistic data (real paper titles, plausible numbers and timings); file names UPPERCASE_WITH_UNDERSCORES, no extensions, type shown by icon; no lorem, no fake testimonials or stats, no buzzword slogans.
@@ -39,9 +39,18 @@ The same gates apply inside a product, with different references and tokens:
 - Reuse the app's own tokens and components; don't import the marketing site's palette. Fix a small set of shared primitives first (panel, page container widths, dialog widths, segmented control), then restyle screens with them.
 - Login/signup with a hosted auth widget (e.g. Clerk): style it through its appearance API and localization, and check the pitfalls in build-patterns ("Auth pages").
 
+## Rich interaction, from libraries
+
+Static pages feel cheap. Use the component and animation libraries actively to make every interaction feel alive:
+
+- Every state gets feedback: hover, press, focus, loading/running, success/error, appear/disappear, layout change. Plan these in the interaction storyboards, not as an afterthought.
+- Prefer a ready component (Magic UI, AI Elements, shadcn blocks, 21st.dev) over a hand-written effect; pick from the interaction → component table in [references/ui-references.md](references/ui-references.md). Install and Motion usage: [references/build-patterns.md](references/build-patterns.md).
+- Product demos move: typed prompts, steps advancing, results arriving, numbers counting, tabs swapping scenes.
+- Keep it purposeful: motion explains state or draws the eye to what changed. Heavy decorative effects (3D cards, particles, aurora backgrounds) stay on marketing pages, never in work screens. Respect reduced motion everywhere.
+
 ## Stack defaults
 
-Use the project's stack. For new sites: Next.js + Tailwind v4 + shadcn/ui + lucide-react, **Motion** as the only animation library, Magic UI components **copied as source** (not a dependency). One component library, one animation library.
+Use the project's stack. For new sites: Next.js + Tailwind v4 + shadcn/ui + lucide-react, **Motion** as the only animation library, Magic UI / AI Elements / Aceternity / 21st.dev components **installed as source** through the shadcn CLI (not as npm dependencies). One base component system, one animation library.
 
 ## Hard-won rules (details in build-patterns)
 

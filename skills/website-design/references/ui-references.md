@@ -41,7 +41,27 @@ Access checked 2026-10-12 with an automated browser: Page Flows and Perplexity s
 - **Aceternity UI**: animation-forward; sources disagree on free vs paid, check its license.
 - **Tailark**: marketing sections. **ReUI / Origin UI / Kibo UI**: app and dashboard components.
 - **UINice** (uinice.com): curated directory of UI kits with real code (169 sites on 2026-10-10; weekly Hot 100 chart and Recipes were still empty). It only links out, so each kit's license applies.
-- Rules: one component library and one animation library (Motion) per project. Check the licence ("Free" does not mean commercial use is allowed) and the date of the last commit, not the star count.
+- Rules: one base component system (shadcn) and one animation library (Motion) per project; the sources above add components into it as source, so mixing them is fine. Check the licence ("Free" does not mean commercial use is allowed) and the date of the last commit, not the star count.
+
+## Interaction → component
+
+Reach for these before hand-writing an effect. Install commands: build-patterns, "Component sources: install".
+
+| Interaction | Use |
+| --- | --- |
+| Items arriving (deliverables, logs, notifications) | Magic UI Animated List; Motion `staggerChildren` |
+| Running / in-progress | Magic UI Border Beam on the active card, Animated Shiny Text or AI Elements Shimmer for "Thinking…", spinner → check |
+| Agent tool calls, reasoning, plans, approvals | AI Elements Tool, Reasoning, Plan, Confirmation |
+| Generated output | AI Elements Artifact; file card entering with `AnimatePresence` |
+| Numbers changing (usage, counts) | Magic UI Number Ticker / CountUp (render final value on the server) |
+| Tabs, nav, segmented control | Motion `layoutId` sliding pill |
+| Hover on cards and panels | cursor spotlight (CSS variables), border brighten; Aceternity 3D card for marketing only |
+| Section reveal on scroll | Magic UI Blur Fade (transform only above the fold), `useInView` |
+| Connections between steps or tools | Magic UI Animated Beam, Orbiting Circles |
+| Scroll progress, reading position | Magic UI Scroll Progress, TOC ring |
+| Logos, tags, examples in a row | Magic UI Marquee |
+| Expand / collapse, drawers, dialogs | Motion `layout` + `AnimatePresence`; spring for drawers |
+| Hero product demo | 3D tilted live window (build-patterns, "Hero art direction") |
 
 ## Helpers
 
