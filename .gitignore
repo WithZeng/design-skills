@@ -1,0 +1,3 @@
+# 本机配置：含本地路径与中转站域名，只提交 config.example.json
+skills/image-gen/config.json
+.DS_Store
