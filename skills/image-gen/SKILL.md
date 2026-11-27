@@ -25,7 +25,7 @@ Options: `--budget <usd>`, `--model`, `--size 1024x1024|1024x1536|1536x1024`, `-
 - Models: run `--models` first and use the newest image models the relays offer; a model may not exist on every relay. Don't use older generations unless the user asks.
   - Pick by task difficulty: the stronger model for characters, identity consistency, `--ref` edits, complex compositions and text inside the image; the lighter one for backgrounds, props, icons and simple scenes. If the lighter one misses, retry with the stronger one.
   - The script uses `--model`, else `defaultModel` in `config.json`. At the time of writing these were `gpt-image-2.6-sunburst` (stronger) and `gpt-image-2.6-flare` (lighter).
-  - If a relay lacks that model and the run fails on fallback, rerun with the newest same-tier model it lists in `--models`.
+  - If a fallback relay lacks that model and the run fails, rerun with the newest same-tier model it lists in `--models`, even if that is an older generation. The rerun counts spend from zero, so pass `--budget` as the original cap minus what the failed run logged in `requests.jsonl`.
   - Per-request price is set by the relay, not the model: see `config.json`.
 - Don't put aspect words ("9:16", "portrait") in the prompt when `--size` is set; the model follows the words over `size`.
 - `--transparent`: check the result really has alpha, not a painted checkerboard. A 4xx about `background` means the model has no transparency support: generate on a flat color and key it out.
