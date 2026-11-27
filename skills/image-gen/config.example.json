@@ -1,5 +1,5 @@
 {
-  "defaultModel": "gpt-image-2.5-sunburst",
+  "defaultModel": "gpt-image-2.6-sunburst",
   "defaultBudget": 5,
   "envFile": "/absolute/path/to/credentials-file",
   "price": {
