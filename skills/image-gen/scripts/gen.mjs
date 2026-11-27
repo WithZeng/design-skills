@@ -137,7 +137,15 @@ const {res, host} = refs.length
     })
   : await post('/images/generations', () => ({method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({...common, n: 1})}));
 
-const text = await res.text();
+let text;
+try {
+  text = await res.text();
+} catch (e) {
+  // the relay may bill this request, so it has to reach the log before we exit
+  const error = `${host}: response body lost (${e.cause?.code ?? e.message})`;
+  log({relay: host, status: res.status, error});
+  die(error);
+}
 let json = null;
 try {
   json = JSON.parse(text);
